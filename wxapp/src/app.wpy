@@ -1,0 +1,94 @@
+<style lang="less">
+  .container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+
+    border-top-left-radius: 25rpx;
+    border-top-right-radius: 25rpx;
+    box-shadow: 1px 1px 5px #dddddd;
+  }
+
+  .card{
+    margin-top: 30rpx;
+    box-shadow: 1px 1px 10px #dddddd;
+    
+    .title{
+      color: #fff;
+      background: #2F4056;
+      box-sizing: border-box;
+      text-align: center;
+      padding: 20rpx;
+    }
+
+    .body{
+      box-sizing: border-box;
+      padding: 20rpx;
+      font-size: 25rpx;
+    }
+  }
+</style>
+
+<script>
+  import wepy from "wepy"
+  import 'wepy-async-function';
+
+  export default class extends wepy.app {
+    constructor() {
+      super();
+      this.use('promisify');
+    }
+    config = {
+      pages: [
+        'pages/index', 'pages/prize','pages/user',"pages/getuser"
+      ],
+      window: {
+
+      },
+      "tabBar": {
+        "list": [
+          {
+            "selectedIconPath": "./lib/home_click.png",
+            "iconPath": "./lib/home.png",
+            "pagePath": "pages/index",
+            "text": "首页"
+          },
+          {
+            "selectedIconPath": "./lib/trophy_click.png",
+            "iconPath": "./lib/trophy.png",
+            "pagePath": "pages/prize",
+            "text": "抽奖"
+          },
+          {
+            "selectedIconPath": "./lib/user_click.png",
+            "iconPath": "./lib/user.png",
+            "pagePath": "pages/user",
+            "text": "个人中心"
+          }
+        ]
+      },
+      "permission": {
+        "scope.userLocation": {
+          "desc": "请求获取您的信息"
+        }
+      }
+    };
+    siteInfo = require("./siteinfo");
+    util = require("./js/util");
+
+    onLaunch() {
+
+    }
+
+    onShow(){
+      if(wepy.getStorageSync("user").length===0){
+        wepy.navigateTo({
+          url:"./pages/getuser"
+        })
+      }
+    }
+  }
+</script>

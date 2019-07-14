@@ -1,0 +1,296 @@
+<template>
+  <view class="content">
+    <view class="prize">
+      <image src="{{prize_setting.prize_back}}"></image>
+
+      <view class="lottery_number">
+        <van-tag type="danger">当前抽奖次数为：{{user.lottery_number}}</van-tag>
+      </view>
+
+      <view @tap="start_prize" class="start_prize">开始抽奖</view>
+      <view class="prize_code">
+        <repeat for="{{current_prize}}" index="index" item="item">
+          <text>{{item}}</text>
+        </repeat>
+      </view>
+    </view>
+
+    <!--距离开奖时间还有-->
+    <view class="card">
+      <view class="title">
+        <view wx:if="{{lottery_time.bol}}">距离开奖时间</view>
+        <view style="color: red;font-weight: bold;font-size: 40rpx">{{lottery_time.title}}</view>
+      </view>
+
+      <!--上期中奖名单-->
+      <view class="body" wx:if="{{!show_the_winners}}">
+        <rich-text nodes="{{prize_setting.last_the_winners}}" space="nbsp"></rich-text>
+      </view>
+
+      <!--本期中奖人员-->
+      <view class="body" wx:if="{{show_the_winners}}">
+        <rich-text nodes="{{prize_setting.the_winners}}" space="nbsp"></rich-text>
+      </view>
+    </view>
+
+    <!--规则说明-->
+    <view class="card">
+      <view class="title">规则说明</view>
+      <view class="body">
+        <rich-text nodes="{{prize_setting.setting_regulation}}" space="nbsp"></rich-text>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="title">奖品展示</view>
+      <view class="body">
+        <rich-text nodes="{{prize_setting.awards_show}}" space="nbsp"></rich-text>
+      </view>
+    </view>
+  </view>
+
+  <!--提示-->
+  <van-toast id="van-toast"/>
+  <!--跳转到个人-->
+  <van-dialog id="van-dialog"/>
+
+</template>
+
+<script>
+  import wepy from 'wepy';
+  import Toast from '../components/vant/toast/toast';
+  import util from '../util';
+  import Dialog from '../components/vant/dialog/dialog';
+
+  export default class Prize extends wepy.page {
+    config = {
+      navigationBarTitleText: '抽奖',
+      usingComponents: {
+        'van-button': '../components/vant/button/index',
+        'van-toast': '../components/vant/toast/index',
+        'van-dialog': '../components/vant/dialog/index',
+        'van-cell': '../components/vant/cell/index',
+        'van-cell-group': '../components/vant/cell-group/index',
+        'van-tag': '../components/vant/tag/index'
+      }
+    };
+    components = {
+
+    };
+    data = {
+      current_prize:[0,0,0,0,0,0,0],
+      //抽奖时间
+      lottery_time: '0时0分0秒',
+      //抽奖时间搓
+      lottery_time_to_rub: '',
+      /*抽奖设置*/
+      prize_setting: [],
+      /*是否显示中奖人*/
+      show_the_winners: false,
+      /*用户数据*/
+      user:null,
+      /*二维码随机数*/
+      scene:0,
+      /*false表示不运行扫码那个环节*/
+      is_scene:false
+    };
+    computed = {};
+    methods = {
+      //开始抽奖
+      start_prize: () => {
+        /*判断用户是否填写过手机号，地址，姓名*/
+        let user = wepy.getStorageSync('user');
+        if (user.name === '' || user.phone === '') {
+          Dialog.alert({
+            message: '请完善您的个人信息'
+          }).then(() => {
+            wepy.switchTab({
+              url: '/pages/user'
+            });
+          });
+          return;
+        }
+
+        /*判断抽奖次数*/
+        new Promise((resolve, reject) => {
+          if (this.user.lottery_number > 0) {
+            this.$parent.util.request({
+              url: 'entry/wxapp/start_prize',
+              data: {
+                nickname: wepy.getStorageSync('user').nickname
+              },
+              success: (res) => {
+                this.current_prize = res.data.data.split("");
+                Toast(`成功获得抽奖码：${res.data.data}`);
+                //抽奖次数
+                this.user.lottery_number = this.user.lottery_number - 1;
+                this.$apply();
+                resolve(this.user.lottery_number);
+              }
+            });
+          } else {
+            Toast('您抽奖次数已用完');
+          }
+        }).then((data) => {
+          /*将抽奖次数上传*/
+          this.$parent.util.request({
+            url: 'entry/wxapp/set_user_lottery_number',
+            data: {
+              nickname: wepy.getStorageSync('user').nickname,
+              lottery_number: data
+            },
+            success(res) {
+              wepy.setStorageSync('user', res.data.data);
+            }
+          });
+        });
+      }
+    };
+
+    onLoad(option) {
+      if(option.scene) {
+        this.is_scene = true;
+        this.scene = decodeURIComponent(option.scene);
+        this.$apply();
+      }
+
+      /*获取抽奖设置*/
+      this.$parent.util.request({
+        url: 'entry/wxapp/get_prize_setting',
+        success: (res) => {
+          this.lottery_time_to_rub = res.data.data.lottery_time;
+          //规则说明
+          this.prize_setting = res.data.data;
+          this.$apply();
+        }
+      });
+    }
+
+    onShow() {
+      /*判断本地是否有用户数据，并且当前验证二维码参数是否打开*/
+      if(wepy.getStorageSync('user').length!==0&&this.is_scene) {
+        //增加抽奖次数
+        new Promise(resolve => {
+          /*获取后台存储在缓存中的随机数*/
+          this.$parent.util.request({
+            url: 'entry/wxapp/get_ran',
+            success: (res) => {
+              resolve(res.data.data);
+            }
+          });
+        }).then((data) => {
+          console.log(data);
+          /*将后端随机数与前端随机数进行比对*/
+          if (data !== this.scene) {
+            this.is_scene = false;
+            Toast("扫描的二维码以过期");
+            throw "强行中断";
+          }
+          this.$parent.util.request({
+            url: 'entry/wxapp/add_Lottery_number',
+            data: {
+              nickname: wepy.getStorageSync('user').nickname
+            },
+            success: (res) => {
+              /*将获取到的新用户数据保存在本地*/
+              wepy.setStorageSync('user', res.data.data);
+              this.user.lottery_number = wepy.getStorageSync('user').lottery_number;
+              this.$apply();
+              Toast("您成功增加了一次抽奖机会");
+            }
+          });
+        }).then(() => {
+          /*将后端随机数标记为空*/
+          this.$parent.util.request({
+            url: 'entry/wxapp/set_ran',
+            success: (res) => {
+              this.is_scene = false;
+            }
+          })
+        })
+      }
+
+      /*抽奖时间格式化*/
+      setInterval(() => {
+        this.lottery_time = util.clock(this.lottery_time_to_rub);
+        this.show_the_winners = !this.lottery_time.bol;
+        this.$apply();
+      }, 1000);
+
+      this.user = wepy.getStorageSync('user');
+    }
+  }
+</script>
+
+<style lang="less">
+  .content {
+    box-sizing: border-box;
+    padding: 30rpx;
+
+    .prize {
+      position: relative;
+
+      image {
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: -1;
+      }
+
+      .lottery_number {
+        text {
+          margin-left: 10rpx;
+        }
+      }
+
+      /*滚动按钮*/
+      .start_prize {
+        width: 40%;
+        text-align: center;
+        margin: 0 auto;
+        border-radius: 10rpx;
+        padding: 10rpx;
+        position: relative;
+        top: 10rpx;
+        background: #fff;
+        box-shadow: 1px 1px 5px #dddddd;
+      }
+
+      .prize_code {
+        border-radius: 10rpx;
+        /*background: #FFB800;*/
+        box-sizing: border-box;
+        padding: 35rpx;
+        display: flex;
+        flex-direction: row;
+
+        text {
+          padding: 15rpx;
+          width: 14%;
+          border-radius: 10rpx;
+          background: #ffffff;
+          margin-left: 8rpx;
+          box-shadow: 1px 1px 5px #dddddd;
+          text-align: center;
+        }
+      }
+    }
+  }
+
+  .qrcode {
+    box-sizing: border-box;
+    padding: 10rpx;
+
+    .qrcode_img {
+      margin: 0 auto;
+      width: 300rpx;
+      height: 300rpx;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+    }
+
+    .qrcode_text {
+      text-align: center;
+    }
+  }
+</style>

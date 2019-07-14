@@ -1,0 +1,115 @@
+<template>
+    <view class="content">
+      <swiper indicator-dots="true" autoplay="true" interval="3000" circular="true">
+        <repeat for="{{system_setting.slideshow}}" key="index" index="index" item="item">
+          <swiper-item>
+            <image src="{{item}}"></image>
+          </swiper-item>
+        </repeat>
+      </swiper>
+
+      <!--商品-->
+      <view class="shops">
+        <repeat for="{{shops}}" key="index" index="index" item="shop">
+          <view class="shop">
+            <image src="{{shop.img}}"></image>
+            <view>{{shop.name}}</view>
+          </view>
+        </repeat>
+      </view>
+    </view>
+</template>
+
+<script>
+  import wepy from "wepy";
+
+  export default class Index extends wepy.page {
+    config = {
+      navigationBarTitleText: '首页',
+      usingComponents: {
+        "van-button": "../components/vant/button/index",
+        "van-toast": "../components/vant/toast/index",
+        "van-dialog": "../components/vant/dialog/index"
+      }
+    };
+
+    components = {
+
+    };
+
+    data = {
+      system_setting:[],
+      shops:[]
+    };
+    computed = {};
+    methods = {};
+    onLoad() {
+
+    }
+
+    onShow() {
+      /*获取系统设置*/
+      this.$parent.util.request({
+        url:"entry/wxapp/system_setting",
+        success:(res)=>{
+          this.system_setting = res.data.data;
+          this.$apply();
+        }
+      });
+
+      /*获取所有商品*/
+      this.$parent.util.request({
+        url:"entry/wxapp/get_shops_all",
+        success:(res)=>{
+          this.shops = res.data.data;
+          this.$apply();
+        }
+      })
+    }
+  }
+</script>
+<style lang="less">
+
+  .content{
+    background: #eee;
+
+    swiper{
+      height: 400rpx;
+      image{
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .shops{
+      box-sizing: border-box;
+      padding: 30rpx;
+      .shop{
+        box-shadow: 1px 1px 5px #eee;
+        background: #fff;
+        display: flex;
+        flex-direction: row;
+        border-radius: 10rpx;
+        padding: 20rpx;
+        margin-top: 10rpx;
+        box-sizing: border-box;
+        align-items: center;
+
+        image{
+          box-shadow: 1px 1px 5px #eee;
+          width: 290rpx;
+          height: 220rpx;
+        }
+
+        view{
+          margin-left: 20rpx;
+          text-align: center;
+        }
+      }
+    }
+  }
+
+
+
+
+</style>

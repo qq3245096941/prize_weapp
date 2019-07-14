@@ -1,0 +1,305 @@
+<template>
+  <view class="user">
+    <image mode="widthFix" src="{{user.avatar}}"></image>
+    <text>{{user.nickname}}</text>
+  </view>
+
+  <view class="lottery_number">
+    <text class="text">抽奖次数</text>
+    <text class="num">{{user.lottery_number}}</text>
+  </view>
+
+  <van-cell-group>
+    <van-field
+      bind:change="change_name"
+      value="{{user.name}}"
+      center
+      clearable
+      label="姓名"
+      placeholder="真实姓名"
+      disabled="{{is_edit_name}}"
+      use-button-slot>
+      <van-button slot="button" size="small" type="{{is_edit_name?'':'primary'}}" @tap="edit_name">
+        {{is_edit_name?'修改':'确认'}}
+      </van-button>
+    </van-field>
+
+    <van-field
+      bind:change="change_phone"
+      value="{{user.phone}}"
+      center
+      clearable
+      label="电话"
+      placeholder="手机号"
+      disabled="{{is_edit_phone}}"
+      use-button-slot>
+      <van-button slot="button" size="small" type="{{is_edit_phone?'':'primary'}}" @tap="edit_phone">
+        {{is_edit_phone?'修改':'确认'}}
+      </van-button>
+    </van-field>
+
+    <van-field
+      autosize
+      type="textarea"
+      value="{{user.address}}"
+      center
+      clearable
+      label="地址"
+      disabled
+      use-button-slot>
+      <van-button slot="button" size="small" type="primary'" @tap="edit_address">
+        在地图中选择
+      </van-button>
+    </van-field>
+
+    <van-field
+      autosize
+      value="{{service_phone}}"
+      center
+      clearable
+      label="客服电话"
+      disabled
+      use-button-slot>
+      <van-button slot="button" size="small" type="primary'" @tap="call_service_phone">拨打</van-button>
+    </van-field>
+  </van-cell-group>
+
+  <view style="text-align: center;padding: 10rpx;">我的抽奖码</view>
+  <swiper indicator-dots="true">
+    <repeat for="{{prize_list}}" key="index" index="index" item="item">
+    <swiper-item>
+        <image mode="widthFix" src="../lib/ticket.png"></image>
+        <text>{{item}}</text>
+    </swiper-item>
+    </repeat>
+  </swiper>
+
+  <button open-type="contact" bindcontact="handleContact">联系客服</button>
+
+  <van-dialog
+    use-slot
+    show="{{is_show_accredit}}"
+    show-cancel-button
+    bind:close="is_alert_close"
+    confirm-button-open-type="openSetting">
+    <view style="text-align: center;padding: 20rpx">请求获取您位置信息，请确认</view>
+  </van-dialog>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class User extends wepy.page {
+    config = {
+      navigationBarTitleText: '个人中心',
+      'usingComponents': {
+        'van-button': '../components/vant/button/index',
+        'van-toast': '../components/vant/toast/index',
+        'van-dialog': '../components/vant/dialog/index',
+        'van-cell': '../components/vant/cell/index',
+        'van-cell-group': '../components/vant/cell-group/index',
+        'van-field': '../components/vant/field/index',
+        'van-icon': '../components/vant/icon/index',
+        'van-collapse': '../components/vant/collapse/index',
+        'van-collapse-item': '../components/vant/collapse-item/index'
+      }
+    };
+
+    components = {};
+    data = {
+      /*是否开启授权弹框*/
+      is_show_accredit:false,
+      service_phone: null,
+      user: null,
+      prize_list: [],
+      //是否禁用编辑名称框
+      is_edit_name: true,
+      is_edit_phone: true
+    };
+    computed = {};
+
+    methods = {
+      /*拨打电话*/
+      call_service_phone:()=>{
+        wx.makePhoneCall({
+          phoneNumber: this.service_phone
+        })
+      },
+      /*取消弹框*/
+      is_alert_close:()=>{
+        this.is_show_accredit = false;
+      },
+
+      change_name: (e) => {
+        this.user.name = e.detail;
+      },
+      change_phone: (e) => {
+        this.user.phone = e.detail;
+      },
+      /*修改名称*/
+      edit_name: () => {
+        if (!this.is_edit_name) {
+          this.$parent.util.request({
+            url: 'entry/wxapp/set_user_name',
+            data: {
+              nickname: this.user.nickname,
+              name: this.user.name
+            },
+            success: (res) => {
+              wepy.setStorageSync('user', res.data.data);
+            }
+          });
+        }
+        this.is_edit_name = !this.is_edit_name;
+      },
+
+      /*修改电话*/
+      edit_phone: () => {
+        if (!this.is_edit_phone) {
+          this.$parent.util.request({
+            url: 'entry/wxapp/set_user_phone',
+            data: {
+              nickname: this.user.nickname,
+              phone: this.user.phone
+            },
+            success: (res) => {
+              wepy.setStorageSync('user', res.data.data);
+            }
+          });
+        }
+        this.is_edit_phone = !this.is_edit_phone;
+      },
+      /*编辑地址*/
+      edit_address:()=>{
+        new Promise((resolve, reject) => {
+          wx.chooseLocation({
+            success:(res)=>{
+              resolve(res.address);
+            },
+            fail:()=>{
+              reject();
+            }
+          })
+          /*已经获取权限*/
+        }).then((data)=>{
+          this.$parent.util.request({
+            url:"entry/wxapp/set_user_address",
+            data:{
+              nickname:this.user.nickname,
+              address:data
+            },
+            success:(res)=>{
+              wepy.setStorageSync('user',res.data.data);
+              this.user.address = data;
+              this.$apply();
+            }
+          });
+        }).catch(()=>{
+          /*点击取消按钮后*/
+          wx.getSetting({
+            success:(res)=>{
+              console.log(res);
+              if(!res.authSetting['scope.userLocation']){
+                this.is_show_accredit = true;
+                this.$apply();
+              }
+            }
+          })
+        });
+
+      }
+    };
+
+    onLoad() {
+      this.$parent.util.request({
+        url: 'entry/wxapp/system_setting',
+        success: (res) => {
+          this.service_phone = res.data.data.phone;
+          this.$apply();
+        }
+      });
+    }
+
+    onShow() {
+      /*每次先将这设置为空*/
+      this.prize_list = [];
+      this.user = wepy.getStorageSync('user');
+      this.$parent.util.request({
+        url: 'entry/wxapp/user_prize_code',
+        data: {
+          nickname: this.user.nickname
+        },
+        success: (res) => {
+          let list = res.data.data;
+          list.forEach((item) => {
+            this.prize_list.push(item.prize_code);
+          });
+          this.$apply();
+        }
+      });
+    }
+  }
+</script>
+<style lang="less">
+  /*抽奖次数*/
+  .lottery_number {
+    background: #fff;
+    box-shadow: 1px 1px 10px #dddddd;
+    border-radius: 15rpx;
+    margin: 20rpx;
+    box-sizing: border-box;
+    padding: 40rpx;
+    position: relative;
+    bottom: 20rpx;
+
+    .num {
+      position: absolute;
+      right: 100rpx;
+      font-weight: bold;
+      color: #FFB800;
+    }
+  }
+
+  swiper {
+    padding: 50rpx;
+    box-sizing: border-box;
+    height: 430rpx;
+    position: relative;
+
+    image {
+      position: absolute;
+      width: 100%;
+    }
+
+    text {
+      position: absolute;
+      z-index: 1000;
+      left: 22%;
+      top: 30%;
+      font-weight: bold;
+      color: #fff;
+      font-size: 80rpx;
+      letter-spacing: 3rpx;
+    }
+  }
+
+  /*用户头像*/
+  .user {
+    overflow: hidden;
+    padding: 70rpx;
+    display: flex;
+    align-items: center;
+
+    image {
+      border-radius: 50%;
+      width: 100rpx;
+      height: 100rpx;
+    }
+
+    text {
+      font-weight: bold;
+      margin-left: 10rpx;
+      font-size: 30rpx;
+    }
+  }
+</style>
