@@ -1,0 +1,18 @@
+{template 'common/header'}
+
+<div>
+    <img src="data:image/jpeg;base64,{$post_rest['content']}" class="qrcode" alt="">
+</div>
+
+<a class="btn btn-success" href="{php echo $this->createWebUrl('qrcode')}">更新二维码</a>
+<hr>
+<span class="label label-danger">当前随机数为：{$ran}</span>
+
+<style>
+    .qrcode {
+        width: 250px;
+        height: 250px;
+    }
+</style>
+
+{template 'common/footer'}

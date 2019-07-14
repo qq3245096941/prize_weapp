@@ -1,0 +1,61 @@
+{template 'common/header'}
+
+<form class="we7-form" method="post" action="{php echo $this->createWebUrl('prize_setting')}">
+    <input type="hidden" name="id" value="{$prize_setting['id']}"/>
+
+    <!--抽奖背景图-->
+    <div class="form-group">
+        <label class="control-label col-sm-2">抽奖背景图</label>
+        <div class="form-controls col-sm-8">
+            {php echo tpl_form_field_image('prize_back',$prize_setting['prize_back'])}
+        </div>
+    </div>
+
+    <!--开奖时间-->
+    <div class="form-group">
+        <label class="control-label col-sm-2">开奖时间</label>
+        <div class="form-controls col-sm-8">
+            {php echo _tpl_form_field_date(lottery_time,$prize_setting['lottery_time'],true)}
+        </div>
+    </div>
+
+    <!--上期中奖名单-->
+    <div class="form-group">
+        <label class="control-label col-sm-2">上期中奖名单</label>
+        <div class="form-controls col-sm-8">
+            {php echo tpl_ueditor('last_the_winners',$prize_setting['last_the_winners'])}
+        </div>
+    </div>
+
+    <!--中奖名单-->
+    <div class="form-group">
+        <label class="control-label col-sm-2">中奖名单</label>
+        <div class="form-controls col-sm-8">
+            {php echo tpl_ueditor('the_winners',$prize_setting['the_winners'])}
+        </div>
+    </div>
+
+
+    <!--奖品展示-->
+    <div class="form-group">
+        <label class="control-label col-sm-2">奖品展示</label>
+        <div class="form-controls col-sm-8">
+            {php echo tpl_ueditor('awards_show',$prize_setting['awards_show'])}
+        </div>
+    </div>
+
+    <!--设置规则-->
+    <div class="form-group">
+        <label class="control-label col-sm-2">设置规则</label>
+        <div class="form-controls col-sm-8">
+            {php echo tpl_ueditor('setting_regulation',$prize_setting['setting_regulation'])}
+        </div>
+    </div>
+
+    <hr>
+    <button class="btn btn-success" type="submit">提交</button>
+</form>
+
+
+
+{template 'common/footer'}

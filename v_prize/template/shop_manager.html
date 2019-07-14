@@ -1,0 +1,31 @@
+{template 'common/header'}
+
+<a class="btn btn-success" href="{php echo $this->createWebUrl('add_shop')}">添加商品</a>
+<hr>
+<table class="we7-table">
+    <thead>
+    <tr>
+        <th>id</th>
+        <th>商品名称</th>
+        <th>商品图片</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {loop $shops $shop}
+    <tr>
+        <td>{$shop['id']}</td>
+        <td>{$shop['name']}</td>
+        <td><img width="100" src="{media $shop['img']}" alt=""></td>
+        <td>
+            <div class="btn-group-vertical">
+                <a class="btn btn-success" href="{php echo $this->createWebUrl('add_shop').'&id='.$shop['id']}">编辑</a>
+                <a class="btn btn-danger" href="{php echo $this->createWebUrl('shop_manager').'&id='.$shop['id'].'&shop_state=delete'}">删除</a>
+            </div>
+        </td>
+    </tr>
+    {/loop}
+    </tbody>
+</table>
+
+{template 'common/footer'}

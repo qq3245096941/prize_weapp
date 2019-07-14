@@ -1,0 +1,48 @@
+{template 'common/header'}
+
+<form class="we7-form" method="post" action="{php echo $this->createWebUrl('system_setting')}">
+    <input type="hidden" name="id" value="{$system_setting['id']}" />
+    <!--常规设置-->
+    <div class="convention">
+        <div class="form-group">
+            <label class="control-label col-sm-2">“抽奖”关键字文本</label>
+            <div class="form-controls col-sm-8">
+                <input class="form-control" type="text" name="title" value="{$system_setting['title']}">
+                <div class="help-block">小程序审核中，涉及到抽奖关键字，会审核失败</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">首页轮播图</label>
+            <div class="form-controls col-sm-8">
+                {php echo tpl_form_field_multi_image(slideshow,$system_setting['slideshow'])}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">商家电话</label>
+            <div class="form-controls col-sm-8">
+                <input class="form-control" type="text" name="phone" value="{$system_setting['phone']}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">appid</label>
+            <div class="form-controls col-sm-8">
+                <input class="form-control" type="text" name="appid" value="{$system_setting['appid']}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">appsecret</label>
+            <div class="form-controls col-sm-8">
+                <input class="form-control" type="text" name="appsecret" value="{$system_setting['appsecret']}">
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <button class="btn btn-success" type="submit">提交</button>
+</form>
+
+{template 'common/footer'}

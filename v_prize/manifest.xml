@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns="http://www.w7.cc" versionCode="">
+	
+	<application setting='false'>
+		<name><![CDATA[小v抽奖]]></name>
+
+		<identifie><![CDATA[v_prize]]></identifie>
+
+		<version><![CDATA[1.0.2]]></version>
+
+		<ability><![CDATA[xxx]]></ability>
+
+		<type><![CDATA[xxx]]></type>
+
+		<description><![CDATA[抽奖系统]]></description>
+
+		<author><![CDATA[追风的牧羊人3245096941@qq.com]]></author>
+
+		<url><![CDATA[]]></url>
+
+		<setting><![CDATA[]]></setting>
+
+	</application>
+
+	
+	<platform>
+		<handles>
+			<message type="text" />
+			<message type="image" />
+			<message type="voice" />
+			<message type="video" />
+			<message type="shortvideo" />
+			<message type="location" />
+			<message type="link" />
+			<message type="qr" />
+			<message type="click" />
+			<message type="merchant_order" />
+			<message type="user_get_card" />
+			<message type="user_del_card" />
+			<message type="user_consume_card" />
+			<message type="trace" />
+			<message type="subscribe" />
+		</handles>
+
+		<rule embed="false" />
+
+		<rule embed="false" />
+
+	<supports>
+
+			<item type="wxapp" />
+	</supports>
+
+	</platform>
+
+	
+	<bindings>
+		<menu>
+			<entry title="系统设置" do="system_setting" state="system_setting" displayorder="1"/>
+			<entry title="抽奖管理" do="prize_setting" state="prize_setting" displayorder="2"/>
+			<entry title="抽奖二维码" do="qrcode" state="qrcode" displayorder="3"/>
+			<entry title="用户管理" do="users_setting" state="users_setting" displayorder="4"/>
+			<entry title="商品管理" do="shop_manager" state="shop_manager" displayorder="5"/>
+		</menu>
+	</bindings>
+
+	<install><![CDATA[
+		CREATE TABLE `ims_v_prize_prize_setting` (
+		  `id` int(11) NOT NULL AUTO_INCREMENT,
+		  `prize_back` varchar(255) NOT NULL DEFAULT '',
+		  `lottery_time` varchar(20) NOT NULL DEFAULT '' COMMENT '开奖时间',
+		  `awards_show` text NOT NULL COMMENT '奖品展示',
+		  `setting_regulation` text NOT NULL COMMENT '设置规则',
+		  `the_winners` text NOT NULL,
+		  `last_the_winners` text NOT NULL COMMENT '上期中奖名单',
+		  PRIMARY KEY (`id`)
+		) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+		CREATE TABLE `ims_v_prize_shop` (
+		  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+		  `name` varchar(255) NOT NULL DEFAULT '',
+		  `img` varchar(255) NOT NULL DEFAULT '',
+		  PRIMARY KEY (`id`)
+		) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+		CREATE TABLE `ims_v_prize_system_setting` (
+		  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+		  `title` varchar(255) NOT NULL DEFAULT '',
+		  `slideshow` text NOT NULL COMMENT '轮播图',
+		  `appid` varchar(255) NOT NULL DEFAULT '',
+		  `appsecret` varchar(255) NOT NULL DEFAULT '',
+		  `phone` varchar(11) NOT NULL DEFAULT '',
+		  PRIMARY KEY (`id`)
+		) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+		CREATE TABLE `ims_v_prize_user` (
+		  `nickname` varchar(255) NOT NULL,
+		  `name` varchar(10) NOT NULL DEFAULT '' COMMENT '真实姓名',
+		  `avatar` varchar(255) NOT NULL DEFAULT '' COMMENT '头像',
+		  `openid` varchar(100) NOT NULL DEFAULT '',
+		  `phone` varchar(11) NOT NULL DEFAULT '' COMMENT '电话号码',
+		  `address` varchar(255) NOT NULL DEFAULT '' COMMENT '地址',
+		  `prize_code` char(7) NOT NULL COMMENT '抽奖码',
+		  `lottery_number` tinyint(2) NOT NULL DEFAULT '0',
+		  `prize_num` tinyint(4) NOT NULL DEFAULT '0',
+		  PRIMARY KEY (`nickname`)
+		) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+		CREATE TABLE `ims_v_prize_winning_code` (
+		  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+		  `prize_code` varchar(7) NOT NULL DEFAULT '',
+		  PRIMARY KEY (`id`)
+		) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+
+	]]></install>
+	<uninstall><![CDATA[]]></uninstall>
+	<upgrade><![CDATA[]]></upgrade>
+</manifest>

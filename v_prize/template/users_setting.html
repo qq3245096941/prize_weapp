@@ -1,0 +1,96 @@
+{template 'common/header'}
+
+<!--搜索框-->
+<form class="we7-padding-bottom clearfix" method="post" action="{php echo $this->createWebUrl('users_setting')}">
+    <div class="input-group pull-left col-sm-4">
+        <input type="text" name="query_prize_code" value="{$_GPC['query_prize_code']}" class="form-control" placeholder="请输入抽奖码">
+        <span class="input-group-btn">
+                <button type="submit" class="btn btn-default search">
+                    <i class="fa fa-search"></i>
+                </button>
+        </span>
+    </div>
+</form>
+
+<a class="btn btn-success" href="{php echo $this->createWebUrl('users_setting').'&user_state=clear'}">清理所有未中奖的抽奖号码</a>
+
+
+<table class="we7-table">
+    <thead>
+    <tr>
+        <th>微信信息</th>
+        <th>个人信息</th>
+        <th>抽奖码</th>
+        <th>抽奖次数</th>
+    </tr>
+    </thead>
+    <tbody>
+    {loop $users $key $user}
+    <tr>
+        <td>
+            <p><img width="50" src="{$user['avatar']}" alt=""></p>
+            <p>{$user['nickname']}</p>
+            <p>{$user['openid']}</p>
+        </td>
+
+        <td>
+            <p><span class="label label-success">{$user['name']}</span></p>
+            <p><span class="label label-danger">{$user['phone']}</span></p>
+            <span>
+                <span class="label label-info">{$user['address']}</span>
+
+            </span>
+        </td>
+        <td>
+           <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal{$key}">
+                查看抽奖码
+            </button>
+            <div class="modal fade" id="myModal{$key}" tabindex="-1" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="myModalLabel">{$user['nickname']}的所有抽奖码</h4>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th>id</th>
+                                    <th>抽奖码</th>
+                                    <th>抽奖码生成时间</th>
+                                    <th>是否为中奖码</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {loop $user['prize_code'] $index $prize_code}
+                                <tr>
+                                    <td>{$prize_code['id']}</td>
+                                    <td>{$prize_code['prize_code']}</td>
+                                    <td>{php echo date('Y年m月d日 H:i:s',$prize_code['create_time'])}</td>
+                                    <td>
+                                        {if $prize_code['is_winning_code']==1}
+                                        <span class="label label-success">中奖码</span>
+                                        {else}
+                                        <span class="label label-danger">抽奖码</span>丨
+                                        <a href="{php echo $this->createWebUrl('users_setting').'&user_state=update&id='.$prize_code['id']}" class="btn btn-default btn-xs">
+                                            标记为中奖码
+                                        </a>
+                                        {/if}
+                                    </td>
+                                </tr>
+                                {/loop}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+        <td>{$user['lottery_number']}</td>
+    </tr>
+    {/loop}
+    </tbody>
+</table>
+
+{template 'common/footer'}
