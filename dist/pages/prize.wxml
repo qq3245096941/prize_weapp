@@ -1,0 +1,55 @@
+
+  <view class="content">
+    <view class="prize">
+      <image src="{{prize_setting.prize_back}}"/>
+
+      <view class="lottery_number">
+        <van-tag type="danger">当前抽奖次数为：{{user.lottery_number}}</van-tag>
+      </view>
+
+      <view bindtap="start_prize" class="start_prize">开始抽奖</view>
+      <view class="prize_code">
+        <block wx:for="{{current_prize}}" wx:for-index="index" wx:for-item="item" wx:key="key">
+          <text>{{item}}</text>
+        </block>
+      </view>
+    </view>
+
+    <!--距离开奖时间还有-->
+    <view class="card">
+      <view class="title">
+        <view  wx:if="{{lottery_time.bol}}">距离开奖时间</view>
+        <view style="color: red;font-weight: bold;font-size: 40rpx">{{lottery_time.title}}</view>
+      </view>
+
+      <!--上期中奖名单-->
+      <view class="body"  wx:if="{{!show_the_winners}}">
+        <rich-text nodes="{{prize_setting.last_the_winners}}" space="nbsp"/>
+      </view>
+
+      <!--本期中奖人员-->
+      <view class="body" wx:if="{{show_the_winners}}">
+        <rich-text nodes="{{prize_setting.the_winners}}" space="nbsp"/>
+      </view>
+    </view>
+
+    <!--规则说明-->
+    <view class="card">
+      <view class="title">规则说明</view>
+      <view class="body">
+        <rich-text nodes="{{prize_setting.setting_regulation}}" space="nbsp"/>
+      </view>
+    </view>
+
+    <view class="card">
+      <view class="title">奖品展示</view>
+      <view class="body">
+        <rich-text nodes="{{prize_setting.awards_show}}" space="nbsp"/>
+      </view>
+    </view>
+  </view>
+
+  <!--提示-->
+  <van-toast id="van-toast"/>
+  <!--跳转到个人-->
+  <van-dialog id="van-dialog"/>

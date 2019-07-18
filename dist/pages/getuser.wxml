@@ -1,0 +1,11 @@
+
+  <view class="content">
+    <image mode="widthFix" src="../lib/wechat.png"/>
+    <view>
+      <view class="text1">申请获取以下权限</view>
+      <view class="text2">获得您的公开信息（头像，昵称等）</view>
+    </view>
+    <van-button open-type="getUserInfo" round="round" type="primary" bindgetuserinfo="updateUserInfo" size="large">授权登录</van-button>
+  </view>
+
+  <van-toast id="van-toast"/>

@@ -1,0 +1,59 @@
+.content {
+  box-sizing: border-box;
+  padding: 30rpx;
+}
+.content .prize {
+  position: relative;
+  /*滚动按钮*/
+}
+.content .prize image {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: -1;
+}
+.content .prize .lottery_number text {
+  margin-left: 10rpx;
+}
+.content .prize .start_prize {
+  width: 40%;
+  text-align: center;
+  margin: 0 auto;
+  border-radius: 10rpx;
+  padding: 10rpx;
+  position: relative;
+  top: 10rpx;
+  background: #fff;
+  box-shadow: 1px 1px 5px #dddddd;
+}
+.content .prize .prize_code {
+  border-radius: 10rpx;
+  /*background: #FFB800;*/
+  box-sizing: border-box;
+  padding: 35rpx;
+  display: flex;
+  flex-direction: row;
+}
+.content .prize .prize_code text {
+  padding: 15rpx;
+  width: 14%;
+  border-radius: 10rpx;
+  background: #ffffff;
+  margin-left: 8rpx;
+  box-shadow: 1px 1px 5px #dddddd;
+  text-align: center;
+}
+.qrcode {
+  box-sizing: border-box;
+  padding: 10rpx;
+}
+.qrcode .qrcode_img {
+  margin: 0 auto;
+  width: 300rpx;
+  height: 300rpx;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+.qrcode .qrcode_text {
+  text-align: center;
+}

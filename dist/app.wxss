@@ -1,0 +1,27 @@
+.container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  border-top-left-radius: 25rpx;
+  border-top-right-radius: 25rpx;
+  box-shadow: 1px 1px 5px #dddddd;
+}
+.card {
+  margin-top: 30rpx;
+  box-shadow: 1px 1px 10px #dddddd;
+}
+.card .title {
+  color: #fff;
+  background: #2F4056;
+  box-sizing: border-box;
+  text-align: center;
+  padding: 20rpx;
+}
+.card .body {
+  box-sizing: border-box;
+  padding: 20rpx;
+  font-size: 25rpx;
+}

@@ -1,0 +1,54 @@
+/*抽奖次数*/
+.lottery_number {
+  background: #fff;
+  box-shadow: 1px 1px 10px #dddddd;
+  border-radius: 15rpx;
+  margin: 20rpx;
+  box-sizing: border-box;
+  padding: 40rpx;
+  position: relative;
+  bottom: 20rpx;
+}
+.lottery_number .num {
+  position: absolute;
+  right: 100rpx;
+  font-weight: bold;
+  color: #FFB800;
+}
+swiper {
+  padding: 50rpx;
+  box-sizing: border-box;
+  height: 430rpx;
+  position: relative;
+}
+swiper image {
+  position: absolute;
+  width: 100%;
+}
+swiper text {
+  position: absolute;
+  z-index: 1000;
+  left: 22%;
+  top: 30%;
+  font-weight: bold;
+  color: #fff;
+  font-size: 80rpx;
+  letter-spacing: 3rpx;
+}
+/*用户头像*/
+.user {
+  overflow: hidden;
+  padding: 70rpx;
+  display: flex;
+  align-items: center;
+}
+.user image {
+  border-radius: 50%;
+  width: 100rpx;
+  height: 100rpx;
+}
+.user text {
+  font-weight: bold;
+  margin-left: 10rpx;
+  font-size: 30rpx;
+}

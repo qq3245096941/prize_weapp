@@ -1,0 +1,11 @@
+'use strict';
+
+var _component = require('./../common/component.js');
+
+var _transition = require('./../mixins/transition.js');
+
+(0, _component.VantComponent)({
+    classes: ['enter-class', 'enter-active-class', 'enter-to-class', 'leave-class', 'leave-active-class', 'leave-to-class'],
+    mixins: [(0, _transition.transition)(true)]
+});
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LmpzIl0sIm5hbWVzIjpbImNsYXNzZXMiLCJtaXhpbnMiXSwibWFwcGluZ3MiOiI7O0FBQUE7O0FBQ0E7O0FBQ0EsOEJBQWM7QUFDVkEsYUFBUyxDQUNMLGFBREssRUFFTCxvQkFGSyxFQUdMLGdCQUhLLEVBSUwsYUFKSyxFQUtMLG9CQUxLLEVBTUwsZ0JBTkssQ0FEQztBQVNWQyxZQUFRLENBQUMsNEJBQVcsSUFBWCxDQUFEO0FBVEUsQ0FBZCIsImZpbGUiOiJpbmRleC5qcyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IFZhbnRDb21wb25lbnQgfSBmcm9tICcuLi9jb21tb24vY29tcG9uZW50JztcclxuaW1wb3J0IHsgdHJhbnNpdGlvbiB9IGZyb20gJy4uL21peGlucy90cmFuc2l0aW9uJztcclxuVmFudENvbXBvbmVudCh7XHJcbiAgICBjbGFzc2VzOiBbXHJcbiAgICAgICAgJ2VudGVyLWNsYXNzJyxcclxuICAgICAgICAnZW50ZXItYWN0aXZlLWNsYXNzJyxcclxuICAgICAgICAnZW50ZXItdG8tY2xhc3MnLFxyXG4gICAgICAgICdsZWF2ZS1jbGFzcycsXHJcbiAgICAgICAgJ2xlYXZlLWFjdGl2ZS1jbGFzcycsXHJcbiAgICAgICAgJ2xlYXZlLXRvLWNsYXNzJ1xyXG4gICAgXSxcclxuICAgIG1peGluczogW3RyYW5zaXRpb24odHJ1ZSldXHJcbn0pO1xyXG4iXX0=

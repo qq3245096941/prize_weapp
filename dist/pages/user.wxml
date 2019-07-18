@@ -1,0 +1,50 @@
+
+  <view class="user">
+    <image mode="widthFix" src="{{user.avatar}}"/>
+    <text>{{user.nickname}}</text>
+  </view>
+
+  <view class="lottery_number">
+    <text class="text">抽奖次数</text>
+    <text class="num">{{user.lottery_number}}</text>
+  </view>
+
+  <van-cell-group>
+    <van-field  bind:change="change_name" value="{{user.name}}" center="center" clearable="clearable" label="姓名" placeholder="真实姓名" disabled="{{is_edit_name}}" use-button-slot="use-button-slot">
+      <van-button slot="button" size="small" type="{{is_edit_name?'':'primary'}}" bindtap="edit_name">
+        {{is_edit_name?'修改':'确认'}}
+      </van-button>
+    </van-field>
+
+    <van-field  bind:change="change_phone" value="{{user.phone}}" center="center" clearable="clearable" label="电话" placeholder="手机号" disabled="{{is_edit_phone}}" use-button-slot="use-button-slot">
+      <van-button slot="button" size="small" type="{{is_edit_phone?'':'primary'}}" bindtap="edit_phone">
+        {{is_edit_phone?'修改':'确认'}}
+      </van-button>
+    </van-field>
+
+    <van-field autosize="autosize" type="textarea" value="{{user.address}}" center="center" clearable="clearable" label="地址" disabled use-button-slot="use-button-slot">
+      <van-button slot="button" size="small" type="primary'" bindtap="edit_address">
+        在地图中选择
+      </van-button>
+    </van-field>
+
+    <van-field autosize="autosize" value="{{service_phone}}" center="center" clearable="clearable" label="客服电话" disabled use-button-slot="use-button-slot">
+      <van-button slot="button" size="small" type="primary'" bindtap="call_service_phone">拨打</van-button>
+    </van-field>
+  </van-cell-group>
+
+  <view style="text-align: center;padding: 10rpx;">我的抽奖码</view>
+  <swiper indicator-dots="true">
+    <block wx:for="{{prize_list}}" wx:for-index="index" wx:for-item="item" wx:key="index">
+    <swiper-item>
+        <image mode="widthFix" src="../lib/ticket.png"/>
+        <text>{{item}}</text>
+    </swiper-item>
+    </block>
+  </swiper>
+
+  <button open-type="contact" bindcontact="handleContact">联系客服</button>
+
+  <van-dialog use-slot="use-slot" show="{{is_show_accredit}}" show-cancel-button="show-cancel-button"  bind:close="is_alert_close" confirm-button-open-type="openSetting">
+    <view style="text-align: center;padding: 20rpx">请求获取您位置信息，请确认</view>
+  </van-dialog>
