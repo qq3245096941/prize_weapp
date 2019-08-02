@@ -22,3 +22,22 @@ var siteinfo = {
 module.exports = siteinfo;
 ```
 即可
+***
+本小程序只适用于wepy 1.7.*版本。首先查看你的wepy版本
+```
+wepy -v
+```
+如果出现
+```
+1.7.3
+```
+则就可以直接编译项目了
+```
+wepy build --watch
+```
+***
+如果出现版本为``2.0.0(alpha)``，请使用命令覆盖当前wepy-cli，wepy-cli2.0版本无法编译低版本项目
+```
+cnpm install wepy-cli -g
+```
+
