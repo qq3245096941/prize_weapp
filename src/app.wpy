@@ -43,7 +43,7 @@
     }
     config = {
       pages: [
-        'pages/index', 'pages/prize','pages/user',"pages/getuser"
+        'pages/index', 'pages/prize','pages/user',"pages/getuser","pages/company"
       ],
       window: {
 

@@ -8,6 +8,8 @@
         </block>
       </swiper>
 
+      <image bindtap="navt_company" mode="widthFix" src="{{system_setting.company_img}}"/>
+
       <!--商品-->
       <view class="shops">
         <block wx:for="{{shops}}" wx:for-index="index" wx:for-item="shop" wx:key="index">

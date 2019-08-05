@@ -1,0 +1,43 @@
+<template>
+  <view class="text">
+    <rich-text  nodes="{{system_setting.company_particulars}}"></rich-text>
+  </view>
+</template>
+
+<script>
+  import wepy from 'wepy';
+
+  export default class company extends wepy.page {
+    config = {
+      navigationBarTitleText: '公司简介'
+    };
+
+    components = {};
+
+    data = {
+      system_setting:null
+    };
+
+    computed = {};
+
+    methods = {};
+
+    onLoad() {
+      /*获取系统设置*/
+      this.$parent.util.request({
+        url:"entry/wxapp/system_setting",
+        success:(res)=>{
+          this.system_setting = res.data.data;
+          this.$apply();
+        }
+      });
+    }
+  }
+</script>
+
+<style lang="less">
+  .text{
+    box-sizing: border-box;
+    padding: 15rpx;
+  }
+</style>

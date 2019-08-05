@@ -8,6 +8,8 @@
         </repeat>
       </swiper>
 
+      <image @tap="navt_company" mode="widthFix" src="{{system_setting.company_img}}"></image>
+
       <!--商品-->
       <view class="shops">
         <repeat for="{{shops}}" key="index" index="index" item="shop">
@@ -42,7 +44,14 @@
       shops:[]
     };
     computed = {};
-    methods = {};
+    methods = {
+      /*跳转至公司简介*/
+      navt_company(){
+        wx.navigateTo({
+          url:"/pages/company"
+        })
+      }
+    };
     onLoad() {
 
     }
@@ -108,8 +117,4 @@
       }
     }
   }
-
-
-
-
 </style>
