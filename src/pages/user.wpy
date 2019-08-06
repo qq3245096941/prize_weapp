@@ -230,6 +230,7 @@
           nickname: this.user.nickname
         },
         success: (res) => {
+          console.log(res);
           let list = res.data.data;
           list.forEach((item) => {
             this.prize_list.push(item.prize_code);

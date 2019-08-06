@@ -8,7 +8,7 @@
         </block>
       </swiper>
 
-      <image bindtap="navt_company" mode="widthFix" src="{{system_setting.company_img}}"/>
+      <image style="width:100%" bindtap="navt_company" mode="widthFix" src="{{system_setting.company_img}}"/>
 
       <!--商品-->
       <view class="shops">
